@@ -1,0 +1,10 @@
+// Fonts here
+@font-face {
+  font-family: 'FiraSans';
+  src: url('/assets/fonts/FiraSans.eot');
+  src: url('/assets/fonts/FiraSans.eot') format('embedded-opentype'),
+  url('/assets/fonts/FiraSans.woff2') format('woff2'),
+  url('/assets/fonts/FiraSans.woff') format('woff'),
+  url('/assets/fonts/FiraSans.ttf') format('truetype'),
+  url('/assets/fonts/FiraSans.svg#FiraSans') format('svg');
+}

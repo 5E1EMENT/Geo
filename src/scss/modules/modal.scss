@@ -1,0 +1,217 @@
+.modal {
+  width: 100%;
+  max-width: 380px;
+  margin: 0 auto;
+  position: absolute;
+  display: none;
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background-color: $orange-color;
+    padding: 15px;
+    border-radius: 15px 15px 0 0;
+    &__location {
+      font-family: 'FiraSans';
+      font-size: 12px;
+      color: $default-color;
+      font-weight: 400;
+      display: block;
+      cursor: pointer;
+      text-align: center;
+      padding: 0 10px;
+    }
+    &__mark {
+      display: block;
+      width: 8px;
+      height: 14px;
+    }
+    &__close {
+      width: 15px;
+      height: 15px;
+      position: relative;
+      cursor: pointer;
+      &:after {
+        content: '';
+        position: absolute;
+        display: block;
+        width: 15px;
+        height: 3px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%) rotate(-45deg);
+        background-color: $default-color;
+
+
+      }
+      &:before {
+        content: '';
+        position: absolute;
+        display: block;
+        width: 15px;
+        height: 3px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%) rotate(45deg);
+        background-color: $default-color;
+
+
+
+      }
+    }
+  }
+  &-comments {
+    height: 150px;
+    overflow-y: scroll;
+    background-color: $default-color;
+    padding: 15px 15px;
+
+
+    //ScrollBar
+
+    &::-webkit-scrollbar-track
+    {
+      border-radius: 10px;
+      background-color: transparent;
+    }
+    &::-webkit-scrollbar
+    {
+      width: 6px;
+      background-color: transparent;
+    }
+    &::-webkit-scrollbar-thumb
+    {
+      border-radius: 10px;
+
+      background-color: $neutral-placeholder;
+    }
+
+
+    &__comment {
+      margin-bottom: 15px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+      &-empty {
+        font-family: 'FiraSans';
+        font-size: 16px;
+        color: $mainFontColor ;
+        font-weight: 600;
+        display: block;
+      }
+    }
+    &__comment-info {
+      display: flex;
+      &--name{
+        font-family: 'FiraSans';
+        font-size: 16px;
+        color: $mainFontColor ;
+        font-weight: 600;
+        display: block;
+      }
+      &--place {
+        font-family: 'FiraSans';
+        font-size: 16px;
+        color: $neutral-secondary;
+        font-weight: normal;
+        display: block;
+        margin-left: 10px;
+      }
+      &--date {
+        font-family: 'FiraSans';
+        font-size: 16px;
+        color: $neutral-secondary;
+        font-weight: normal;
+        display: block;
+        margin-left: 10px;
+      }
+    }
+    &__text {
+      font-family: 'FiraSans';
+      font-size: 15px;
+      color: $mainFontColor ;
+      font-weight: 400;
+      display: block;
+      margin: 0;
+      margin-top: 10px;
+    }
+  }
+  &-comment {
+    padding: 0 15px 15px 15px;
+    background-color: $default-color;
+    border-radius: 0 0 15px 15px ;
+    &__form {
+      text-align: right;
+      position: relative;
+    }
+    &__title {
+      border-top: 2px solid $neutral-placeholder;
+      padding: 10px 0 0 0;
+      text-transform: uppercase;
+      font-family: 'FiraSans';
+      font-size: 16px;
+      color: $orange-color;
+      font-weight: 600;
+      margin-bottom: 15px;
+      margin-left:10px;
+    }
+    &__name {
+      width: 100%;
+      border-radius: 20px;
+      border: 1px solid $neutral-placeholder;
+      font-family: 'FiraSans';
+      font-size: 16px;
+      color: $neutral-secondary;
+      font-weight: 400;
+      padding: 10px;
+      outline: none;
+      margin-bottom: 15px;
+
+    }
+    &__place {
+      width: 100%;
+      border-radius: 20px;
+      border: 1px solid $neutral-placeholder;
+      font-family: 'FiraSans';
+      font-size: 16px;
+      color: $neutral-secondary;
+      font-weight: 400;
+      padding: 10px;
+      outline: none;
+      margin-bottom: 15px;
+    }
+    &__desc {
+      width: 100%;
+
+      border-radius: 20px;
+      border: 1px solid $neutral-placeholder;
+      font-family: 'FiraSans';
+      font-size: 16px;
+      color: $neutral-secondary;
+      font-weight: 400;
+      padding: 10px;
+      outline: none;
+      margin-bottom: 15px;
+    }
+    &__btn {
+      border-radius: 15px;
+      font-family: 'FiraSans';
+      font-size: 15px;
+      color: $default-color;
+      font-weight: 400;
+      padding: 10px;
+      margin-bottom: 15px;
+      background-color: $orange-color;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      display: inline-block;
+    }
+  }
+
+
+}
+.modal-active {
+  display: block;
+}
+

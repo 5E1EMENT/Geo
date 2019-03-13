@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://api-maps.yandex.ru/2.1?apikey=c2292788-d089-4feb-9b9a-6026a07202c1&lang=ru_RU" type="text/javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.0/handlebars.min.js"></script>
+  <title>Webpack</title>
+</head>
+<body>
+
+  <!-- map -->
+  <div class="map" id="map">
+
+  </div>
+
+<div class="modal" >
+  <!--Шапка модалки-->
+  <div class="modal-header" >
+    <img class="modal-header__mark" src="/assets/img/littleMark.png" alt="" >
+    <h2 class="modal-header__location" >Расположение</h2>
+    <div class="modal-header__close"></div>
+  </div>
+  <!--//Коментарии-->
+  <div class="modal-comments">
+    <div class="modal-comments__wrapper">
+      <span class="modal-comments__comment-empty">Отзывов пока нет...</span>
+
+
+      <!--<div class="modal-comments__comment">-->
+        <!--<div class="modal-comments__comment-info">-->
+          <!--<h4 class="modal-comments__comment-info&#45;&#45;name">tolik</h4>-->
+          <!--<span class="modal-comments__comment-info&#45;&#45;place">ssgpo</span>-->
+          <!--<span class="modal-comments__comment-info&#45;&#45;date">30.05.2020</span>-->
+        <!--</div>-->
+        <!--<p class="modal-comments__text">Всё херово, работаю! </p>-->
+      <!--</div>-->
+      <!--<div class="modal-comments__comment">-->
+        <!--<div class="modal-comments__comment-info">-->
+          <!--<h4 class="modal-comments__comment-info&#45;&#45;name">nurlan</h4>-->
+          <!--<span class="modal-comments__comment-info&#45;&#45;place">freelance</span>-->
+          <!--<span class="modal-comments__comment-info&#45;&#45;date">30.05.2020</span>-->
+        <!--</div>-->
+        <!--<p class="modal-comments__text">Всё супер, работаю! </p>-->
+      <!--</div>-->
+    </div>
+  </div>
+  <div class="modal-comment">
+    <h3 class="modal-comment__title">Ваш отзыв</h3>
+    <form action="" class="modal-comment__form">
+      <input type="text" placeholder="Ваше имя" class="modal-comment__name" >
+      <input type="text" placeholder="Укажите место" class="modal-comment__place" >
+      <textarea name="" id=""  rows="5" placeholder="Поделитесь впечатлениями" class="modal-comment__desc" ></textarea>
+      <button type="submit" class="modal-comment__btn">Добавить</button>
+    </form>
+  </div>
+
+</div>
+
+  <script id="comments" type="text/x-handlebars-template">
+    {{#each this}}
+    <div class="modal-comments__comment">
+      <div class="modal-comments__comment-info">
+        <h4 class="modal-comments__comment-info--name">{{name}}</h4>
+        <span class="modal-comments__comment-info--place">{{place}}</span>
+        <span class="modal-comments__comment-info--date">{{date}}</span>
+      </div>
+      <p class="modal-comments__text">{{text}}</p>
+    </div>
+    {{/each}}
+</script>
+
+</body>
+</html>
