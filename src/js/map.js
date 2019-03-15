@@ -1,4 +1,3 @@
-
 // Дождёмся загрузки API и готовности DOM.
 ymaps.ready(init);
 
@@ -8,34 +7,26 @@ let addCommentBtn = document.querySelector('.modal-comment__btn');
 //Данные о коментариях
 let dataComments = {};
 
-let dataMarks = [];
+let dataMarks = {};
 //Импортируем переменную modal,modalName,modalPlace,modalDesc
-import {modal,modalName,modalPlace,modalDesc,modalCommentsWrapper,validate} from "./modal";
+import {modal,modalName,modalPlace,modalDesc,modalCommentsWrapper,btnClose} from "./modal";
 
+import {createPlacemark} from "./functions";
 
 function init () {
     // Создание экземпляра карты и его привязка к контейнеру с
     // заданным id ("map").
     let myPlacemark;
     var myMap = new ymaps.Map('map', {
-        // При инициализации карты обязательно нужно указать
-        // её центр и коэффициент масштабирования.
-        center: [52.9714,63.0880], // Рудный
-        zoom: 14
-    }, {
-        searchControlProvider: 'yandex#search'
-    }), //КАК СДЕЛАТЬ КЛАСТЕРИЗАЦИЮ??!!!!!!!!!!!!!!!!!!!!!!
-        objectManager = new ymaps.ObjectManager({
-            // Чтобы метки начали кластеризоваться, выставляем опцию.
-            clusterize: true,
-            // ObjectManager принимает те же опции, что и кластеризатор.
-            gridSize: 32,
-            clusterDisableClickZoom: true
-    });
-    objectManager.objects.options.set('preset', 'islands#greenDotIcon');
-    objectManager.clusters.options.set('preset', 'islands#greenClusterIcons');
-    myMap.geoObjects.add(objectManager);
-    objectManager.add(dataMarks);
+            // При инициализации карты обязательно нужно указать
+            // её центр и коэффициент масштабирования.
+            center: [52.9714,63.0880], // Рудный
+            zoom: 14,
+            controls: []
+        }, {
+            geoObjectOpenBalloonOnClick: false,
+            searchControlProvider: 'yandex#search'
+        });
 
 
 
@@ -47,17 +38,29 @@ function init () {
         let coords = e.get('coords');
         let [coordX, coordY] = coords;
 
+        const dataKeys = Object.keys(dataComments);
 
-
-        console.log(coords);
+        console.log("Координаты клика",coords);
         //Установим дата атрибуты координат
         modal.dataset.coordX = coordX;
         modal.dataset.coordY = coordY;
+
+//По клику на кластер не даем открыть модалку
 
         // По клику на карте открываем модалку
         if (!modal.classList.contains('modal-active')) {
             modal.classList.add('modal-active');
             //console.log(positionX,positionY);
+        }
+
+        //Перебираем все координаты
+        for (let coord of dataKeys)  {
+
+            //Если координаты клика по карте не совпадают, то обновляем тело модалки
+            if(coord !== coords) {
+                console.log("НЕТУ");
+                modalCommentsWrapper.innerHTML = '<span class="modal-comments__comment-empty">Отзывов пока нет...</span>';
+            }
         }
 
         //В шапку модалки запихиваем координаты
@@ -69,71 +72,76 @@ function init () {
 
         });
 
-        //Обработчик нажатия кнопки добавить
+
+        //};
+    });
+
+    //Обработчик нажатия кнопки добавить
     addCommentBtn.addEventListener('click',(e) => {
-//Множественные клики??
-            e.preventDefault();
+
+        e.preventDefault();
+
+        //Данные отзыва
+        let x = modal.dataset.coordX ;
+        let y = modal.dataset.coordY ;
+        let coords = [x,y];
+        console.log("Кооординаты", coords);
+        let name = modalName.value;
+        let place = modalPlace.value;
+        let desc = modalDesc.value;
+        let address = location.textContent;
+        var date = new Date();
+        var dateOptions = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric'
+        };
+        let finalDate = date.toLocaleString("ru", dateOptions);
+
+        // Объект отзыва
+        var comment = {
+            "address": address,
+            "name": name,
+            "place": place,
+            "text": desc,
+            "date": finalDate
+        };
+
+        //Если есть координаты, то пушим
+
+        if(dataComments[coords]) {
+            dataComments[coords].push(comment);
+        } else { //Если нет, то создаем пустой массив и пушим
+            dataComments[coords] = [];
+            dataComments[coords].push(comment);
+        }
 
 
+        //Добавляем комментарий в массив данных
 
-            //Данные отзыва
-            let x = modal.dataset.coordX ;
-            let y = modal.dataset.coordY ;
-            let name = modalName.value;
-            let place = modalPlace.value;
-            let desc = modalDesc.value;
-            let address = location.textContent;
-            var date = new Date();
-            var dateOptions = {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: 'numeric',
-                minute: 'numeric'
-            };
-            let finalDate = date.toLocaleString("ru", dateOptions);
+        console.log("Координаты всех комментов",dataComments);
 
-            // Объект отзыва
-            var comment = {
-                    "address": address,
-                    "name": name,
-                    "place": place,
-                    "text": desc,
-                    "date": finalDate
-            };
+        //Через Handlebars выводим все данные из data
+        const template = document.querySelector('#comments').textContent;
+        const render = Handlebars.compile(template);
+        const dataValues = Object.values(dataComments);
+        const dataKeys = Object.keys(dataComments);
 
-            if(dataComments[coords]) {
-                dataComments[coords].push(comment);
-            } else {
-                dataComments[coords] = [];
-                dataComments[coords].push(comment);
-            }
+        for (let value of dataValues) {
 
-            //Валидация
-            //if(validate(modalName,modalPlace,modalDesc)) {
-                //Добавляем комментарий в массив данных
-                // dataComments.push(comment);
-                console.log(1);
-                console.log(dataComments);
+            //if(comment)
+            const htmlComments = render(value);//Берем данные из массива
+            modalCommentsWrapper.innerHTML = htmlComments;//Запихиваем в html
+        }
 
-                //Через Handlebars выводим все данные из data
-                const template = document.querySelector('#comments').textContent;
-                const render = Handlebars.compile(template);
-                const htmlComments = render(Object.keys(dataComments));//Берем данные из массива
-
-                modalCommentsWrapper.innerHTML = htmlComments;//Запихиваем в html
-
-                //Добавляем координаты метки в массив
-                var mark = {
-                    "coords":[x,y]
-                }
-                dataMarks.push(mark);
-                //console.log(dataMarks);
-
-
-                //Создаем метку
-                myPlacemark = createPlacemark(coords);
+        for( let key of dataKeys) {
+            console.log(dataComments[key]);
+            if(dataComments[key].length <= 1 ) {
+                myPlacemark = createPlacemark(coords,place,address,desc,finalDate);
                 myMap.geoObjects.add(myPlacemark);
+                clusterer.add(myPlacemark);
                 myPlacemark.events
                     .add('mouseenter', function (e) {
                         // Ссылку на объект, вызвавший событие,
@@ -145,48 +153,101 @@ function init () {
                     });
 
 
-            //};
 
+            }
+        }
+
+        //очищаем поля
         modalName.value = '';
         modalPlace.value = '';
         modalDesc.value = '';
-        });
 
-    //Как сделать клик по метке!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //Функция клика по метке
-        // myPlacemark.events.add('click', function (e) {
-        //     // По клику на карте открываем модалку
-        //     if (!modal.classList.contains('modal-active')) {
-        //         modal.classList.add('modal-active');
-        //         //console.log(positionX,positionY);
-        //     }
-        // })
+    });
 
+    myMap.geoObjects.events.add("click", e => {
 
-        //Функция создания метки
-        function createPlacemark(coords) {
-            return new ymaps.Placemark(coords, {
-                iconCaption: 'поиск...',
+        //Через Handlebars выводим все данные из data
+        const template = document.querySelector('#comments').textContent;
+        const render = Handlebars.compile(template);
 
-            }, {
-                preset: 'islands#violetDotIconWithCaption',
-                draggable: false,
-                iconLayout: 'default#image',
-                // Своё изображение иконки метки.
-                iconImageHref: '/assets/img/Mark.png',
-                // Размеры метки.
-                iconImageSize: [44, 66],
-                // Смещение левого верхнего угла иконки относительно
-                // её "ножки" (точки привязки).
-                iconImageOffset: [-25, -70]
-            });
+        //Координаты комментариев
+        const dataKeys = Object.keys(dataComments);
+
+        //Тело комментариев
+
+        //Место клика
+        let placeMarkCoords = e.get("target").geometry.getCoordinates();
+       // placeMarkCoords;
+        let [coordX, coordY] = placeMarkCoords;
+
+         modal.dataset.coordX = coordX ;
+         modal.dataset.coordY =  coordY;
+        console.log(placeMarkCoords, coordX, coordY);
+        //Перебираем все координаты комментов
+        for (let comment of dataKeys) {
+
+            console.log("rjvtg",comment);
+            console.log("rjvфывфывtg",dataComments[comment]);
+
+            //Открываем модалку
+                if (!modal.classList.contains('modal-active')) {
+                    modal.classList.add('modal-active');
+                    modalName.value = '';
+                    modalPlace.value = '';
+                    modalDesc.value = '';
+                    //console.log(positionX,positionY);
+                }
+
+             // Если в базе данных есть комменты по таким координатам
+            if(comment == placeMarkCoords) {
+
+                    const htmlComments = render(dataComments[comment]);//Берем данные из массива
+                    modalCommentsWrapper.innerHTML = htmlComments;//Запихиваем в html
+
+            }
+
         }
-
 
 
 
     });
 
+// Создаем собственный макет с информацией о выбранном геообъекте.
+    var customItemContentLayout = ymaps.templateLayoutFactory.createClass(
+        // Флаг "raw" означает, что данные вставляют "как есть" без экранирования html.
+        '<h2 class=ballon_header>{{ properties.balloonContentHeader|raw }}</h2>' +
+        '<div class=ballon_body>{{ properties.balloonContentBody|raw }}</div>' +
+        '<div class=ballon_footer>{{ properties.balloonContentFooter|raw }}</div>'
+    );
+
+
+    var clusterer = new ymaps.Clusterer({
+        preset: "islands#invertedBlackClusterIcons",
+        clusterDisableClickZoom: true,
+        clusterOpenBalloonOnClick: true,
+        // Устанавливаем стандартный макет балуна кластера "Карусель".
+        clusterBalloonContentLayout: 'cluster#balloonCarousel',
+        // Устанавливаем собственный макет.
+        clusterBalloonItemContentLayout: customItemContentLayout,
+        // Устанавливаем режим открытия балуна.
+        // В данном примере балун никогда не будет открываться в режиме панели.
+        clusterBalloonPanelMaxMapArea: 0,
+        // Устанавливаем размеры макета контента балуна (в пикселях).
+        clusterBalloonContentLayoutWidth: 200,
+        clusterBalloonContentLayoutHeight: 150,
+        // Устанавливаем максимальное количество элементов в нижней панели на одной странице
+        clusterBalloonPagerSize: 5
+        // Настройка внешнего вида нижней панели.
+        // Режим marker рекомендуется использовать с небольшим количеством элементов.
+        //clusterBalloonPagerType: 'marker'
+
+    });
+
+
+
+    myMap.geoObjects.add(clusterer);
+
+
+
 
 }
-

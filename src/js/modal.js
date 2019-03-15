@@ -12,7 +12,7 @@ btnClose.addEventListener('click', () => {
     modalName.value = '';
     modalPlace.value = '';
     modalDesc.value = '';
-
+    modalCommentsWrapper.innerHTML = '<span class="modal-comments__comment-empty">Отзывов пока нет...</span>';
 });
 
 //Объект с координатами позиции курсора
@@ -61,6 +61,7 @@ window.onclick = function (e) {
             modal.style.left = positionX + "px";
             modal.style.top = positionY + "px";
         }
+
 
 }
 
@@ -111,41 +112,5 @@ if(e.target.classList.contains('modal-header')
 
 //Проверка на отправку данных
 
-function validate(name,place,desc) {
-    let inputName = name.value.trim();
-    let inputPlace = place.value.trim();
-    let inputDesc = desc.value.trim();
-    let error = false;
 
-    if(inputName === '') {
-        error = true;
-        name.style.borderColor = 'red';
-
-    } else {
-        name.style.borderColor = '#f0f0f0';
-
-    }
-    if(inputPlace === '') {
-        error = true;
-        place.style.borderColor = 'red';
-
-    } else {
-        name.style.borderColor = '#f0f0f0';
-
-    }
-    if(inputDesc === '') {
-        error = true;
-        desc.style.borderColor = 'red';
-
-    } else {
-        name.style.borderColor = '#f0f0f0';
-
-    }
-
-    if(!error) {
-        return true;
-    }
-
-
-}
-export {modal,modalName,modalPlace,modalDesc ,modalCommentsWrapper ,validate};
+export {modal,modalName,modalPlace,modalDesc ,modalCommentsWrapper, btnClose};

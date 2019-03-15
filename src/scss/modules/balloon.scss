@@ -1,0 +1,35 @@
+.balloon_modal {
+
+  .balloon_head {
+
+  }
+  .balloon_place {
+    text-transform: uppercase;
+    font-family: 'FiraSans';
+    font-size: 16px;
+    color: $orange-color;
+    font-weight: 600;
+  }
+  .balloon_address {
+     font-family: 'FiraSans';
+     font-size: 12px;
+     color: $neutral-secondary;
+     font-weight: 400;
+   }
+  .balloon_desc {
+    font-family: 'FiraSans';
+    font-size: 16px;
+    color: $neutral-secondary;
+    font-weight: 400;
+  }
+  .balloon_finalDate {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    font-family: 'FiraSans';
+    font-size: 16px;
+    color: $neutral-secondary;
+    font-weight: 400;
+  }
+
+}
