@@ -110,7 +110,6 @@ function init () {
         };
 
         //Если есть координаты, то пушим
-
         if(dataComments[coords]) {
             dataComments[coords].push(comment);
         } else { //Если нет, то создаем пустой массив и пушим
@@ -121,7 +120,7 @@ function init () {
 
         //Добавляем комментарий в массив данных
 
-        console.log("Координаты всех комментов",dataComments);
+        // console.log("Координаты всех комментов",dataComments);
 
         //Через Handlebars выводим все данные из data
         const template = document.querySelector('#comments').textContent;
@@ -129,33 +128,44 @@ function init () {
         const dataValues = Object.values(dataComments);
         const dataKeys = Object.keys(dataComments);
 
+        console.log(dataKeys, dataValues);
+
+        //Перебираем массив со значениями комментов по данным координатам
         for (let value of dataValues) {
 
-            //if(comment)
-            const htmlComments = render(value);//Берем данные из массива
-            modalCommentsWrapper.innerHTML = htmlComments;//Запихиваем в html
-        }
-
-        for( let key of dataKeys) {
-            console.log(dataComments[key]);
-            if(dataComments[key].length <= 1 ) {
-                myPlacemark = createPlacemark(coords,place,address,desc,finalDate);
-                myMap.geoObjects.add(myPlacemark);
-                clusterer.add(myPlacemark);
-                myPlacemark.events
-                    .add('mouseenter', function (e) {
-                        // Ссылку на объект, вызвавший событие,
-                        // можно получить из поля 'target'.
-                        e.get('target').options.set('iconImageHref', '/assets/img/ActiveMark.png');
-                    })
-                    .add('mouseleave', function (e) {
-                        e.get('target').options.set('iconImageHref', '/assets/img/Mark.png');
-                    });
-
-
-
+            //Если значение равно значению по координатам в бд, то рендерим их
+            if(value == dataComments[coords]) {
+                const htmlComments = render(value);//Берем данные из массива
+                modalCommentsWrapper.innerHTML = htmlComments;//Запихиваем в html
             }
+
         }
+
+            //Значение координаты берем из объекта с данными
+            let coordValue = dataComments[coords];
+            console.log('Значение координаты', coordValue);
+            console.log('Длина массива координаты', coordValue.length);
+
+            //Если по этим координатам только одно значение, то создаем метку
+          if(coordValue.length <=1) {
+              myPlacemark = createPlacemark(coords,place,address,desc,finalDate);
+              myMap.geoObjects.add(myPlacemark);
+              clusterer.add(myPlacemark);
+              myPlacemark.events
+                  .add('mouseenter', function (e) {
+                      // Ссылку на объект, вызвавший событие,
+                      // можно получить из поля 'target'.
+                      e.get('target').options.set('iconImageHref', '/assets/img/ActiveMark.png');
+                  })
+                  .add('mouseleave', function (e) {
+                      e.get('target').options.set('iconImageHref', '/assets/img/Mark.png');
+                  });
+
+          }
+
+
+
+
 
         //очищаем поля
         modalName.value = '';
@@ -186,8 +196,6 @@ function init () {
         //Перебираем все координаты комментов
         for (let comment of dataKeys) {
 
-            console.log("rjvtg",comment);
-            console.log("rjvфывфывtg",dataComments[comment]);
 
             //Открываем модалку
                 if (!modal.classList.contains('modal-active')) {
