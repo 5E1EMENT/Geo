@@ -21,7 +21,7 @@ function createPlacemark(coords,place,address,desc,finalDate) {
     html+=      `<div class="balloon_head">`;
     html +=     `<h3 class="balloon_place">${place}</h3>`;
     html +=     `</div>`;
-    html +=     `<a href="" class="balloon_address">${address}</a>`;
+    html +=     `<a data-coords="${coords}" class="balloon_address">${address}</a>`;
     html +=     `<p class="balloon_desc">${desc}</p>`;
     html +=     `<span class="balloon_finalDate">${finalDate}</span>`;
     html += '</div>';
@@ -42,4 +42,7 @@ function createPlacemark(coords,place,address,desc,finalDate) {
         iconImageOffset: [-25, -70]
     });
 }
+
+
+
 export {createPlacemark}

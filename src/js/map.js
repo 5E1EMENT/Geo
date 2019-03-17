@@ -9,7 +9,7 @@ let dataComments = {};
 
 let dataMarks = {};
 //Импортируем переменную modal,modalName,modalPlace,modalDesc
-import {modal,modalName,modalPlace,modalDesc,modalCommentsWrapper,btnClose} from "./modal";
+import {modal,modalName,modalPlace,modalDesc,modalCommentsWrapper, validate , clearFields} from "./modal";
 
 import {createPlacemark} from "./functions";
 
@@ -38,6 +38,7 @@ function init () {
         let coords = e.get('coords');
         let [coordX, coordY] = coords;
 
+
         const dataKeys = Object.keys(dataComments);
 
         console.log("Координаты клика",coords);
@@ -45,13 +46,15 @@ function init () {
         modal.dataset.coordX = coordX;
         modal.dataset.coordY = coordY;
 
-//По клику на кластер не даем открыть модалку
 
         // По клику на карте открываем модалку
         if (!modal.classList.contains('modal-active')) {
             modal.classList.add('modal-active');
             //console.log(positionX,positionY);
         }
+
+
+
 
         //Перебираем все координаты
         for (let coord of dataKeys)  {
@@ -73,13 +76,20 @@ function init () {
         });
 
 
+
         //};
     });
 
     //Обработчик нажатия кнопки добавить
+
+
+
+
     addCommentBtn.addEventListener('click',(e) => {
 
         e.preventDefault();
+        if(validate()) {
+
 
         //Данные отзыва
         let x = modal.dataset.coordX ;
@@ -146,6 +156,7 @@ function init () {
             console.log('Значение координаты', coordValue);
             console.log('Длина массива координаты', coordValue.length);
 
+
             //Если по этим координатам только одно значение, то создаем метку
           if(coordValue.length <=1) {
               myPlacemark = createPlacemark(coords,place,address,desc,finalDate);
@@ -168,12 +179,11 @@ function init () {
 
 
         //очищаем поля
-        modalName.value = '';
-        modalPlace.value = '';
-        modalDesc.value = '';
-
+        clearFields();
+    }
     });
 
+    //Обработка клика по геообъектам
     myMap.geoObjects.events.add("click", e => {
 
         //Через Handlebars выводим все данные из data
@@ -215,7 +225,13 @@ function init () {
             }
 
         }
+        //По клику на кластер не даем открыть модалку
+        let geoObject = e.get('target');
 
+        if(clusterer.getObjectState(myPlacemark).isClustered) {
+            console.log(geoObject);
+            modal.classList.remove('modal-active');
+        }
 
 
     });
@@ -250,6 +266,9 @@ function init () {
         //clusterBalloonPagerType: 'marker'
 
     });
+
+
+
 
 
 

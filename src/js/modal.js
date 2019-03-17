@@ -9,9 +9,9 @@ let btnClose = document.querySelector('.modal-header__close');
 
 btnClose.addEventListener('click', () => {
     modal.classList.remove('modal-active');
-    modalName.value = '';
-    modalPlace.value = '';
-    modalDesc.value = '';
+
+    clearFields();
+
     modalCommentsWrapper.innerHTML = '<span class="modal-comments__comment-empty">Отзывов пока нет...</span>';
 });
 
@@ -110,7 +110,79 @@ if(e.target.classList.contains('modal-header')
 
 }
 
-//Проверка на отправку данных
+//Валидация
+function validate() {
+
+   let name =  modalName.value.trim();
+   let place = modalPlace.value.trim();
+   let desc = modalDesc.value.trim();
+
+   //Если есть пустные значения и цифры в тех полях, где их не должно быть
+    if(name == '' || place == '' || desc == '' || name.match(/\d+/g) || place.match(/\d+/g)) {
+
+        //Если имя пустое или содержит цифры
+        if(name == '' ) {
+            console.log(1);
+            modalName.style.borderColor = 'red';
+        } else if(name.match(/\d+/g)) {
+            modalName.value = '';
+            modalName.style.borderColor = 'red';
+            modalName.placeholder = 'Введите правильное значение имени';
+        } else {
+            modalName.style.borderColor = '#f0f0f0';
+        }
 
 
-export {modal,modalName,modalPlace,modalDesc ,modalCommentsWrapper, btnClose};
+        //Если место пустое или содержит цифры
+        if(place == '') {
+            modalPlace.style.borderColor = 'red';
+
+        } else if(place.match(/\d+/g)) {
+            modalPlace.value = '';
+            modalPlace.style.borderColor = 'red';
+            modalPlace.placeholder = 'Введите правильное значение места';
+        } else {
+            modalPlace.style.borderColor = '#f0f0f0';
+        };
+
+        //Если описание пустое
+        if(desc == '') {
+            modalDesc.style.borderColor = 'red';
+        } else {
+            modalDesc.style.borderColor = '#f0f0f0';
+        }
+
+        return false;
+    } else {
+
+        return true;
+    }
+}
+
+//Функция очищения полей
+function clearFields() {
+    modalName.value = '';
+    modalPlace.value = '';
+    modalDesc.value = '';
+
+    modalName.placeholder = 'Ваше имя';
+    modalPlace.placeholder = 'Укажите место';
+    modalDesc.placeholder = 'Поделитесь впечатлениями';
+
+    modalName.style.borderColor = '#f0f0f0';
+    modalPlace.style.borderColor = '#f0f0f0';
+    modalDesc.style.borderColor = '#f0f0f0';
+}
+
+
+document.addEventListener('click', function (e) {
+    let target = e.target;
+
+    if (target.tagName === 'A') {
+        let coords = target.dataset.coords;
+        console.log(coords);
+
+    }
+})
+
+export {modal,modalName,modalPlace,modalDesc ,modalCommentsWrapper, validate, clearFields};
