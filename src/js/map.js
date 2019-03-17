@@ -190,8 +190,6 @@ function init () {
         const template = document.querySelector('#comments').textContent;
         const render = Handlebars.compile(template);
 
-        //Сохраняем контекст
-        let that = this;
 
         //Координаты комментариев
         const dataKeys = Object.keys(dataComments);
@@ -209,7 +207,7 @@ function init () {
         //Перебираем все координаты комментов
         for (let comment of dataKeys) {
 
-
+            console.log("оммент", comment);
             //Открываем модалку
                 if (!modal.classList.contains('modal-active')) {
                     modal.classList.add('modal-active');
@@ -249,15 +247,20 @@ function init () {
 
         //По клику на ссылку открываем нужную модалку
         document.addEventListener('click', function (e) {
+
+
+            //Координаты комментариев
+            const dataKeys = Object.keys(dataComments);
             let target = e.target;
 
             if (target.tagName === 'A') {
+
                 let coords = target.dataset.coords;
-                let [coordX, coordY] = coords;
+                let coordinates = coords.split(',');
+                let [coordinateX, coordinateY] = coordinates;
 
-                modal.dataset.coordX = coordX ;
-                modal.dataset.coordY =  coordY;
-
+                modal.dataset.coordX = coordinateX ;
+                modal.dataset.coordY =  coordinateY;
 
                 for (let comment of dataKeys) {
 
