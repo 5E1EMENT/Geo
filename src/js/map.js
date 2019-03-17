@@ -190,6 +190,9 @@ function init () {
         const template = document.querySelector('#comments').textContent;
         const render = Handlebars.compile(template);
 
+        //Сохраняем контекст
+        let that = this;
+
         //Координаты комментариев
         const dataKeys = Object.keys(dataComments);
 
@@ -210,10 +213,7 @@ function init () {
             //Открываем модалку
                 if (!modal.classList.contains('modal-active')) {
                     modal.classList.add('modal-active');
-                    modalName.value = '';
-                    modalPlace.value = '';
-                    modalDesc.value = '';
-                    //console.log(positionX,positionY);
+                    clearFields();
                 }
 
              // Если в базе данных есть комменты по таким координатам
@@ -230,10 +230,58 @@ function init () {
 
         if(clusterer.getObjectState(myPlacemark).isClustered) {
             console.log(geoObject);
-            modal.classList.remove('modal-active');
+
+            //Если у модалки есть активный класс, то убираем
+            if( modal.classList.contains('modal-active')) {
+                console.log("ЕСТЬ");
+                modal.classList.remove('modal-active');
+            }
+
+            //клик по балуну
+            clusterer.balloon.events.add('click', function () {
+                //Если у модалки есть активный класс, то убираем
+                if( modal.classList.contains('modal-active')) {
+                    modal.classList.remove('modal-active');
+                }
+            })
+
         }
 
+        //По клику на ссылку открываем нужную модалку
+        document.addEventListener('click', function (e) {
+            let target = e.target;
 
+            if (target.tagName === 'A') {
+                let coords = target.dataset.coords;
+                let [coordX, coordY] = coords;
+
+                modal.dataset.coordX = coordX ;
+                modal.dataset.coordY =  coordY;
+
+
+                for (let comment of dataKeys) {
+
+
+                    //Открываем модалку
+                    if (!modal.classList.contains('modal-active')) {
+                        modal.classList.add('modal-active');
+                        clearFields();
+                    }
+
+                    // Если в базе данных есть комменты по таким координатам
+                    if(comment == coords) {
+
+                        const htmlComments = render(dataComments[comment]);//Берем данные из массива
+                        modalCommentsWrapper.innerHTML = htmlComments;//Запихиваем в html
+
+                    }
+
+
+                }
+
+
+            }
+        });
     });
 
 // Создаем собственный макет с информацией о выбранном геообъекте.

@@ -176,13 +176,13 @@ function clearFields() {
 
 
 document.addEventListener('click', function (e) {
-    let target = e.target;
-
-    if (target.tagName === 'A') {
-        let coords = target.dataset.coords;
-        console.log(coords);
-
-    }
+    // let target = e.target;
+    //
+    // if (target.tagName === 'A') {
+    //     let coords = target.dataset.coords;
+    //     console.log(coords);
+    //
+    // }
 })
 
 export {modal,modalName,modalPlace,modalDesc ,modalCommentsWrapper, validate, clearFields};
