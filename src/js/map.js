@@ -4,10 +4,13 @@ ymaps.ready(init);
 let location = document.querySelector('.modal-header__location');
 let addCommentBtn = document.querySelector('.modal-comment__btn');
 
-//Данные о коментариях
-let dataComments = {};
+//Локальное хранилище
 
-let dataMarks = {};
+//Данные о коментариях
+let dataComments = {} ;
+
+
+
 //Импортируем переменную modal,modalName,modalPlace,modalDesc
 import {modal,modalName,modalPlace,modalDesc,modalCommentsWrapper, validate , clearFields} from "./modal";
 
@@ -52,8 +55,6 @@ function init () {
             modal.classList.add('modal-active');
             //console.log(positionX,positionY);
         }
-
-
 
 
         //Перебираем все координаты
@@ -127,10 +128,9 @@ function init () {
             dataComments[coords].push(comment);
         }
 
-
         //Добавляем комментарий в массив данных
 
-        // console.log("Координаты всех комментов",dataComments);
+        console.log("Координаты всех комментов",JSON.stringify(dataComments));
 
         //Через Handlebars выводим все данные из data
         const template = document.querySelector('#comments').textContent;
@@ -207,7 +207,7 @@ function init () {
         //Перебираем все координаты комментов
         for (let comment of dataKeys) {
 
-            console.log("оммент", comment);
+
             //Открываем модалку
                 if (!modal.classList.contains('modal-active')) {
                     modal.classList.add('modal-active');
